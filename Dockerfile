@@ -26,7 +26,12 @@ ARG BUILD_DATE
 
 COPY --from=speedtest-builder /usr/local/bin/SpeedTest /usr/bin/SpeedTest
 
-RUN rm -rf /var/lib/apt/lists/* && \
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates \
+    curl \
+    gnupg2 \
+    tzdata && \
+    rm -rf /var/lib/apt/lists/* && \
     adduser --system speedtest
 
 USER speedtest
