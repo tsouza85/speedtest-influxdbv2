@@ -33,6 +33,6 @@ jobs:
           context: .
           platforms: linux/amd64
           push: true
-          tags: tsouza85/speedtest-telegraf:latest
+          tags: tsouza85/speedtestplusplus:latest
           secrets: |
             "github_token=${{ secrets.GITHUB_TOKEN }}"

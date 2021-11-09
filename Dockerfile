@@ -1,5 +1,5 @@
 # Multistage build setup
-FROM debian:buster-slim as speedtest-builder
+FROM debian:bullseye-slim as speedtest-builder
 
 WORKDIR /usr/src/speedtest
 
@@ -20,24 +20,25 @@ RUN \
     && cmake -DCMAKE_BUILD_TYPE=Release . \
     && make install
 
-FROM telegraf:latest
+FROM python:3.7-slim-bullseye
 
-USER root
+ARG BUILD_DATE
 
 COPY --from=speedtest-builder /usr/local/bin/SpeedTest /usr/bin/SpeedTest
 
-RUN apt-get update && apt-get install -y --no-install-recommends mtr-tiny dnsutils libcurl4 libxml2 && \
-    apt clean && \
-    rm -rf /var/lib/apt/lists/*; \
-    usermod -G video telegraf; \
-    chown telegraf:telegraf /etc/telegraf -R; \
-    setcap cap_net_raw+ep /usr/bin/telegraf; \
-    setcap cap_net_raw+ep /usr/bin/mtr; \
-    setcap cap_net_raw+ep /usr/bin/SpeedTest
+RUN rm -rf /var/lib/apt/lists/* && \
+    adduser --system speedtest
 
-EXPOSE 8125/udp 8092/udp 8094
+USER speedtest
 
-USER telegraf
+WORKDIR /usr/scr/app
 
-ENTRYPOINT ["/entrypoint.sh"]
-CMD ["telegraf"]
+COPY requirements.txt .
+
+RUN pip3 install -r requirements.txt
+
+COPY speedtest.py .
+
+COPY VERSION /
+
+CMD ["python", "-u", "./speedtest.py"]
