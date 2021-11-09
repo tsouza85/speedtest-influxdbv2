@@ -30,6 +30,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
     curl \
     gnupg2 \
+    libcurl4 \
+    libxml2 \
     tzdata && \
     rm -rf /var/lib/apt/lists/* && \
     adduser --system speedtest
