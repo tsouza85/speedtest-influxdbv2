@@ -1,3 +1,1 @@
-# telegraf
-
-README
+# speedtest-influxdbv2
