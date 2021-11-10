@@ -46,6 +46,8 @@ RUN pip3 install -r requirements.txt
 
 COPY speedtest.py .
 
+COPY run.sh .
+
 COPY VERSION /
 
-CMD ["python", "-u", "./speedtest.py"]
+CMD ["sh", "run.sh"]

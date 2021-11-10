@@ -18,7 +18,7 @@ influxdb_pass = os.getenv("INFLUXDB_PASS")
 influxdb_token = os.getenv("INFLUXDB_TOKEN")
 influxdb_org = os.getenv("INFLUXDB_ORG", "-")
 influxdb_db = os.getenv("INFLUXDB_DB")
-sleepy_time = int(os.getenv("SLEEPY_TIME", 3600))
+# sleepy_time = int(os.getenv("SLEEPY_TIME", 3600))
 start_time = datetime.datetime.utcnow().isoformat()
 default_hostname = socket.gethostname()
 hostname = os.getenv("SPEEDTEST_HOST", default_hostname)
@@ -97,14 +97,14 @@ def speedtest():
         print("ERROR: Error writing to database")
         print(err)
 
-    print("STATE: Sleeping for", sleepy_time, "seconds")
-    time.sleep(sleepy_time)
+    # print("STATE: Sleeping for", sleepy_time, "seconds")
+    # time.sleep(sleepy_time)
 
 
 # Some logging
 print("#####\nScript starting!\n#####")
 print("STATE: Starting at", start_time)
-print("STATE: Sleep time between runs set to", sleepy_time, "seconds")
+# print("STATE: Sleep time between runs set to", sleepy_time, "seconds")
 
 # Check if variables are set
 print("STATE: Checking environment variables...")
