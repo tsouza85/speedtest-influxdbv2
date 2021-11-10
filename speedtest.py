@@ -147,5 +147,8 @@ print("STATE: Database URL is... " + connection_string)
 print("STATE: Connecting to InfluxDB...")
 client = InfluxDBClient(url=connection_string, token=influxdb_token, org=influxdb_org)
 
-while True:
-    speedtest()
+for i in range(10):
+        try:
+            speedtest()
+        except subprocess.CalledProcessError as e: 
+            print("command '{}' return with error (code {}): {}".format(e.cmd, e.returncode, e.output))
