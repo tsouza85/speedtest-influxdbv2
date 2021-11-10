@@ -32,7 +32,8 @@ def db_check():
     if client_health == "pass":
         print("STATE: Connection", client_health)
     elif client_health == "fail":
-        print("ERROR: Connection", client_health, " - Check scheme, host, port, user, pass, token, org, etc...")
+        print("ERROR: Connection", client_health,
+              " - Check scheme, host, port, user, pass, token, org, etc...")
         sys.exit(1)
     else:
         print("ERROR: Something else went wrong")
@@ -51,11 +52,13 @@ def speedtest():
         print("STATE: User specified speedtest server:", speedtest_server)
         speedtest_server_arg = "--server-id="+speedtest_server
         print("STATE: Speedtest running")
-        my_speed = subprocess.run(['/usr/bin/SpeedTest', '--output=json', speedtest_server_arg], stdout=subprocess.PIPE, text=True, check=True)
+        my_speed = subprocess.run(['/usr/bin/SpeedTest', '--output=json',
+                                  speedtest_server_arg], stdout=subprocess.PIPE, text=True, check=True)
     else:
         print("STATE: User did not specify speedtest server, using a random server")
         print("STATE: Speedtest running")
-        my_speed = subprocess.run(['/usr/bin/SpeedTest', '--output=json'], stdout=subprocess.PIPE, text=True, check=True)
+        my_speed = subprocess.run(
+            ['/usr/bin/SpeedTest', '--output=json'], stdout=subprocess.PIPE, text=True, check=True)
 
     # Convert the string into JSON, only getting the stdout and stripping the first/last characters
     my_json = json.loads(my_speed.stdout.strip())
@@ -77,11 +80,13 @@ def speedtest():
     print("STATE: Your upload       ", speed_up, "bps")
     print("STATE: Your ping latency ", ping_latency, "ms")
     print("STATE: Your ping jitter  ", ping_jitter, "ms")
-    print("STATE: Your server info  ", speedtest_server_name, speedtest_server_sponsor, speedtest_server_host)
+    print("STATE: Your server info  ", speedtest_server_name,
+          speedtest_server_sponsor, speedtest_server_host)
 
     # This is ugly, but trying to get output in line protocol format (UNIX time is appended automatically)
     # https://docs.influxdata.com/influxdb/v2.0/reference/syntax/line-protocol/
-    p = "speedtest," + "service=speedtest.net," + "host=" + str(hostname) + " download=" + str(speed_down) + ",upload=" + str(speed_up) + ",ping_latency=" + str(ping_latency) + ",ping_jitter=" + str(ping_jitter) + ",speedtest_server_name=" + "\"" + str(speedtest_server_name) + "\"" + ",speedtest_server_sponsor=" + "\"" + str(speedtest_server_sponsor) + "\"" + ",speedtest_server_host=" + "\"" + str(speedtest_server_host) + "\""
+    p = "speedtest," + "service=speedtest.net," + "host=" + str(hostname) + " download=" + str(speed_down) + ",upload=" + str(speed_up) + ",ping_latency=" + str(ping_latency) + ",ping_jitter=" + str(
+        ping_jitter) + ",speedtest_server_name=" + "\"" + str(speedtest_server_name) + "\"" + ",speedtest_server_sponsor=" + "\"" + str(speedtest_server_sponsor) + "\"" + ",speedtest_server_host=" + "\"" + str(speedtest_server_host) + "\""
 
     try:
         print("STATE: Writing to database")
@@ -142,13 +147,16 @@ else:
     influxdb_token = f'{influxdb_user}:{influxdb_pass}'
 
 # Instantiate the connection
-connection_string = influxdb_scheme + "://" + influxdb_host + ":" + str(influxdb_port)
+connection_string = influxdb_scheme + "://" + \
+    influxdb_host + ":" + str(influxdb_port)
 print("STATE: Database URL is... " + connection_string)
 print("STATE: Connecting to InfluxDB...")
-client = InfluxDBClient(url=connection_string, token=influxdb_token, org=influxdb_org)
+client = InfluxDBClient(url=connection_string,
+                        token=influxdb_token, org=influxdb_org)
 
 for i in range(10):
-        try:
-            speedtest()
-        except subprocess.CalledProcessError as e: 
-            print("command '{}' return with error (code {}): {}".format(e.cmd, e.returncode, e.output))
+    try:
+        speedtest()
+    except subprocess.CalledProcessError as e:
+        print("command '{}' return with error (code {}): {}".format(
+            e.cmd, e.returncode, e.output))
