@@ -103,7 +103,7 @@ def speedtest():
 
 # Some logging
 print("#####\nScript starting!\n#####")
-print("STATE: Starting at", start_time)
+# print("STATE: Starting at", start_time)
 # print("STATE: Sleep time between runs set to", sleepy_time, "seconds")
 
 # Check if variables are set
