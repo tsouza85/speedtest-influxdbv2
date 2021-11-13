@@ -48,6 +48,4 @@ COPY speedtest.py .
 
 COPY run.sh .
 
-COPY VERSION /
-
 CMD ["sh", "run.sh"]

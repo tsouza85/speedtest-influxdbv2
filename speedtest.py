@@ -47,18 +47,10 @@ def speedtest():
     print("STATE: Loop running at", current_time)
 
     # Run Speedtest
-    # If the user specified a speedtest_server ID number, run a different command vs if they didn't specify an ID
-    if speedtest_server:
-        print("STATE: User specified speedtest server:", speedtest_server)
-        speedtest_server_arg = "--server-id="+speedtest_server
-        print("STATE: Speedtest running")
-        my_speed = subprocess.run(['/usr/bin/SpeedTest', '--output=json',
-                                  speedtest_server_arg], stdout=subprocess.PIPE, text=True, check=True)
-    else:
-        print("STATE: User did not specify speedtest server, using a random server")
-        print("STATE: Speedtest running")
-        my_speed = subprocess.run(
-            ['/usr/bin/SpeedTest', '--output=json'], stdout=subprocess.PIPE, text=True, check=True)
+    print("STATE: User did not specify speedtest server, using a random server")
+    print("STATE: Speedtest running")
+    my_speed = subprocess.run(
+        ['/usr/bin/SpeedTest', '--output=json'], stdout=subprocess.PIPE, text=True, check=True, timeout=120)
 
     # Convert the string into JSON, only getting the stdout and stripping the first/last characters
     my_json = json.loads(my_speed.stdout.strip())
