@@ -15,8 +15,9 @@ RUN pacman -Syu git python-pip --needed --noconfirm && \
 
 USER ${user}
 
-RUN paru -Syu speedtest++ && \
-    paru -Sc --noconfirm
+RUN paru -Syu speedtest++
+
+RUN paru -Sc --noconfirm
 
 WORKDIR /usr/scr/app
 
