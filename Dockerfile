@@ -1,48 +1,28 @@
-# Multistage build setup
-FROM debian:bullseye-slim as speedtest-builder
+FROM archlinux:base-devel
 
-WORKDIR /usr/src/speedtest
+ARG user=speedtest
 
-ENV PACKAGES="\
-    build-essential \
-    libcurl4-openssl-dev \
-    libxml2-dev \
-    libssl-dev \
-    cmake \
-    git \
-    "
+RUN pacman -Syu git python-pip --needed --noconfirm && \
+  pacman-key --init && \
+  pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com && \
+  pacman-key --lsign-key 3056513887B78AEB && \
+  pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst' 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst' --noconfirm && \
+  echo '[chaotic-aur]' >> /etc/pacman.conf && \
+  echo 'Include = /etc/pacman.d/chaotic-mirrorlist' >> /etc/pacman.conf && \
+  pacman -Syu paru --needed --noconfirm && \
+  useradd -m ${user} && \
+  echo "${user} ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers.d/${user}
 
-RUN \
-    apt-get update \
-    && apt-get install -y ${PACKAGES} \
-    && git clone https://github.com/taganaka/SpeedTest \
-    && cd SpeedTest \
-    && cmake -DCMAKE_BUILD_TYPE=Release . \
-    && make install
+USER ${user}
 
-FROM python:3.7-slim-bullseye
-
-ARG BUILD_DATE
-
-COPY --from=speedtest-builder /usr/local/bin/SpeedTest /usr/bin/SpeedTest
-
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    ca-certificates \
-    curl \
-    gnupg2 \
-    libcurl4 \
-    libxml2 \
-    tzdata && \
-    rm -rf /var/lib/apt/lists/* && \
-    adduser --system speedtest
-
-USER speedtest
+RUN paru -Syu speedtest++ && \
+  paru -Sc --noconfirm
 
 WORKDIR /usr/scr/app
 
 COPY requirements.txt .
 
-RUN pip3 install -r requirements.txt
+RUN pip install -r requirements.txt
 
 COPY speedtest.py .
 
