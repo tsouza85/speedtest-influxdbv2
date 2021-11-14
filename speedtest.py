@@ -43,7 +43,7 @@ def speedtest():
     db_check()
 
     current_time = datetime.datetime.now().replace(microsecond=0).isoformat()
-    print("STATE: Loop running at", current_time)
+    print("STATE: running at", current_time)
 
     # Run Speedtest
     print("STATE: User did not specify speedtest server, using a random server")
@@ -80,6 +80,8 @@ def speedtest():
         ping_jitter) + ",speedtest_server_name=" + "\"" + str(speedtest_server_name) + "\"" + ",speedtest_server_sponsor=" + "\"" + str(speedtest_server_sponsor) + "\"" + ",speedtest_server_host=" + "\"" + str(speedtest_server_host) + "\""
 
     try:
+        current_time = datetime.datetime.now().replace(microsecond=0).isoformat()
+        print("STATE: running at", current_time)
         print("STATE: Writing to database")
         write_api = client.write_api()
         write_api.write(bucket=influxdb_db, record=p)
