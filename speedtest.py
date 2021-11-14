@@ -49,7 +49,7 @@ def speedtest():
     print("STATE: User did not specify speedtest server, using a random server")
     print("STATE: Speedtest running")
     my_speed = subprocess.run(
-        ['/usr/bin/speedtest++', '--output=json'], stdout=subprocess.PIPE, text=True, check=True, timeout=120)
+        ['/usr/bin/speedtest++', '--output=json'], stdout=subprocess.PIPE, text=True, check=True, timeout=180)
 
     # Convert the string into JSON, only getting the stdout and stripping the first/last characters
     my_json = json.loads(my_speed.stdout.strip())
